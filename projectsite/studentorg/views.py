@@ -23,8 +23,8 @@ class OrganizationList(ListView):
         qs = super(OrganizationList, self).get_queryset(*args, **kwargs)
         if self.request.GET.get("q") != None:
             query = self.request.GET.get('q')
-            qs = qs.filter(Q(name_icontains=query) |
-                            Q(description_icontains=query))
+            qs = qs.filter(Q(name__icontains=query) |
+                            Q(description__icontains=query))
         return qs
 
 class OrganizationCreateView(CreateView):
