@@ -1,5 +1,7 @@
 from django.shortcuts import render
-
+from typing import Any
+from django.db.models.query import QuerySet
+from django.db.models import Q
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from studentorg.models import Organization
@@ -16,6 +18,14 @@ class OrganizationList(ListView):
     context_object_name = 'organization'
     template_name = 'org_list.html'
     paginate_by = 5
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(OrganizationList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") != None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(Q(name_icontains=query) |
+                            Q(description_icontains=query))
+        return qs
 
 class OrganizationCreateView(CreateView):
     model = Organization
