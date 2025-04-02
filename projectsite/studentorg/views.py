@@ -6,6 +6,11 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from studentorg.models import Organization
 from studentorg.forms import OrganizationForm
+
+from studentorg.models import OrgMember
+from studentorg.models import College
+from studentorg.models import Program
+
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
