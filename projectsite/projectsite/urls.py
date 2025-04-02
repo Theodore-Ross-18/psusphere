@@ -16,10 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from studentorg.views import HomePageView, OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView
-from studentorg.views import OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView
-from studentorg.views import StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView
-from studentorg.views import CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView
+from studentorg.views import (HomePageView, 
+                            OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView,
+                            OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView,
+                            StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView,
+                            CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView)
 from studentorg.views import ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView
 
 from studentorg import views
@@ -48,4 +49,10 @@ urlpatterns = [
     # Login/Logout 
     re_path(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     re_path(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
+    
+    # College URLs
+    path('college/', CollegeList.as_view(), name='college-list'),
+    path('college/add/', CollegeCreateView.as_view(), name='college-add'),
+    path('college/<int:pk>/', CollegeUpdateView.as_view(), name='college-update'),
+    path('college/<int:pk>/delete/', CollegeDeleteView.as_view(), name='college-delete'),
 ]

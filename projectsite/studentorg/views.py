@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from studentorg.models import Organization, Student, OrgMember, College, Program
-from studentorg.forms import OrganizationForm, StudentForm
+from studentorg.forms import OrganizationForm, StudentForm, CollegeForm  # Added CollegeForm
 
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -104,19 +104,19 @@ class CollegeList(ListView):
 
 class CollegeCreateView(CreateView):
     model = College
-    form_class = OrganizationForm
-    template_name ='college_add.html'
+    form_class = CollegeForm  # You'll need to create this form
+    template_name = 'org_add.html'  # Reusing organization template
     success_url = reverse_lazy('college-list')
 
 class CollegeUpdateView(UpdateView):
     model = College
-    form_class = OrganizationForm
-    template_name ='college_edit.html'
+    form_class = CollegeForm
+    template_name = 'org_edit.html'  # Reusing organization template
     success_url = reverse_lazy('college-list')
 
 class CollegeDeleteView(DeleteView):
     model = College
-    template_name ='college_del.html'
+    template_name = 'org_del.html'  # Reusing organization template
     success_url = reverse_lazy('college-list')
 
 # Program

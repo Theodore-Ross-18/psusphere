@@ -17,3 +17,9 @@ class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
         fields = ['student_id', 'lastname', 'firstname', 'program']
+
+
+class CollegeForm(forms.ModelForm):
+    class Meta:
+        model = College
+        fields = ['college_name']
