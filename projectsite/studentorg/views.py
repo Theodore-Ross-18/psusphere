@@ -4,12 +4,8 @@ from django.db.models.query import QuerySet
 from django.db.models import Q
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from studentorg.models import Organization
-from studentorg.forms import OrganizationForm
-
-from studentorg.models import OrgMember
-from studentorg.models import College
-from studentorg.models import Program
+from studentorg.models import Organization, Student, OrgMember, College, Program
+from studentorg.forms import OrganizationForm, StudentForm
 
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -63,41 +59,41 @@ class OrgMemberList(ListView):
 class OrgMemberCreateView(CreateView):
     model = OrgMember
     form_class = OrganizationForm
-    template_name = 'orgmember_add.html'
+    template_name = 'org_add.html'  
     success_url = reverse_lazy('orgmember-list')
 
 class OrgMemberUpdateView(UpdateView):
     model = OrgMember
     form_class = OrganizationForm
-    template_name = 'orgmember_edit.html'
+    template_name = 'org_edit.html'  
     success_url = reverse_lazy('orgmember-list')
 
 class OrgMemberDeleteView(DeleteView):
     model = OrgMember
-    template_name = 'orgmember_del.html'
+    template_name = 'org_del.html' 
     success_url = reverse_lazy('orgmember-list')
 
 # Student
 class StudentList(ListView):
-    model = OrgMember
+    model = Student  # Changed from OrgMember to Student
     context_object_name = 'student'
     template_name = 'student_list.html'
 
 class StudentCreateView(CreateView):
-    model = OrgMember
-    form_class = OrganizationForm
-    template_name = 'student_add.html'
+    model = Student
+    form_class = StudentForm
+    template_name = 'org_add.html'
     success_url = reverse_lazy('student-list')
 
 class StudentUpdateView(UpdateView):
-    model = OrgMember
-    form_class = OrganizationForm
-    template_name = 'student_edit.html'
+    model = Student  # Changed from OrgMember to Student
+    form_class = StudentForm  # Changed to StudentForm
+    template_name = 'org_edit.html'  # Using existing template
     success_url = reverse_lazy('student-list')
 
 class StudentDeleteView(DeleteView):
-    model = OrgMember
-    template_name ='student_del.html'
+    model = Student  # Changed from OrgMember to Student
+    template_name = 'org_del.html'  # Using existing template
     success_url = reverse_lazy('student-list')
 
 # College

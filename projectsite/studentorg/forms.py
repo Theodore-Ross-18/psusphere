@@ -11,3 +11,9 @@ class OrganizationForm(ModelForm):
     class Meta:
         model = Organization
         fields = "__all__"
+
+
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ['student_id', 'lastname', 'firstname', 'program']
