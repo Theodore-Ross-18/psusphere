@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Organization Members{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Organization Members List</h4>
+                        <p class="card-category">List of all organization members</p>
+                        <a href="{% url 'orgmember-add' %}" class="btn btn-primary">Add New Member</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Student Name</th>
+                                        <th>Organization</th>
+                                        <th>Position</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for member in orgmember %}
+                                    <tr>
+                                        <td>{{ member.id }}</td>
+                                        <td>{{ member.student }}</td>
+                                        <td>{{ member.organization }}</td>
+                                        <td>{{ member.position }}</td>
+                                        <td>
+                                            <a href="{% url 'orgmember-update' member.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                                            <a href="{% url 'orgmember-delete' member.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">No organization members found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

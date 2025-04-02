@@ -35,14 +35,12 @@ urlpatterns = [
     path('organization_list/<int:pk>/delete/', OrganizationDeleteView.as_view(), name='organization-delete'),
     
     # Org. Members
-    path('orgmember_list/', OrgMemberList.as_view(), name='orgmember-list'),
-    path('orgmember_list/add/', OrgMemberCreateView.as_view(), name='orgmember-add'),
-    path('orgmember_list/<int:pk>/', OrgMemberUpdateView.as_view(), name='orgmember-update'),
-    path('orgmember_list/<int:pk>/delete/', OrgMemberDeleteView.as_view(), name='orgmember-delete'),
-
+    path('orgmember/', OrgMemberList.as_view(), name='orgmember-list'),
+    path('orgmember/add/', OrgMemberCreateView.as_view(), name='orgmember-add'),
+    path('orgmember/<int:pk>/', OrgMemberUpdateView.as_view(), name='orgmember-update'),
+    path('orgmember/<int:pk>/delete/', OrgMemberDeleteView.as_view(), name='orgmember-delete'),
 
     # Login/Logout 
     re_path(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     re_path(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
-
 ]
