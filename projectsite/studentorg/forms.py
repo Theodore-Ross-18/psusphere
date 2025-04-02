@@ -1,6 +1,11 @@
 from django.forms import ModelForm
 from django import forms
 from .models import Organization
+# new added models
+from .models import OrgMember
+from .models import Student 
+from .models import College
+from .models import Program
 
 class OrganizationForm(ModelForm):
     class Meta:
