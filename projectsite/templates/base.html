@@ -14,7 +14,7 @@
 	<div class="wrapper">
 		<div class="main-header">
 			<div class="logo-header">
-				<a href="index.html" class="logo">
+				<a href="{% url 'home' %}" class="logo">
 					Ready Dashboard
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
@@ -168,37 +168,39 @@
 					</div>
 					<ul class="nav">
 						<li class="nav-item">
-							<a href="index.html">
+							<a href="{% url 'home' %}">
 								<i class="la la-dashboard"></i>
 								<p>Dashboard</p>
 							</a>
 						</li>
+						<!-- Organization link is already correct -->
 						<li class="nav-item">
 							<a href="{% url 'organization-list' %}">
 								<i class="la la-table"></i>
 								<p>Organization</p>
 							</a>
 						</li>
+						<!-- Replace other static HTML links -->
 						<li class="nav-item">
-							<a href="forms.html">
+							<a href="#">
 								<i class="la la-keyboard-o"></i>
 								<p>Org. Members</p>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="tables.html">
+							<a href="#">
 								<i class="la la-th"></i>
 								<p>Student</p>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="notifications.html">
+							<a href="#">
 								<i class="la la-bell"></i>
 								<p>College</p>
 							</a>
 						</li>
 						<li class="nav-item active">
-							<a href="typography.html">
+							<a href="#">
 								<i class="la la-font"></i>
 								<p>Typography</p>
 								<span class="badge badge-danger">25</span>
