@@ -20,8 +20,8 @@ from studentorg.views import (HomePageView,
                             OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView,
                             OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView,
                             StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView,
-                            CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView)
-from studentorg.views import ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView
+                            CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView,
+                            ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView)  # Added Program views
 
 from studentorg import views
 from django.contrib.auth import views as auth_views
@@ -55,4 +55,10 @@ urlpatterns = [
     path('college/add/', CollegeCreateView.as_view(), name='college-add'),
     path('college/<int:pk>/', CollegeUpdateView.as_view(), name='college-update'),
     path('college/<int:pk>/delete/', CollegeDeleteView.as_view(), name='college-delete'),
+    
+    # Program URLs
+    path('program/', ProgramList.as_view(), name='program-list'),
+    path('program/add/', ProgramCreateView.as_view(), name='program-add'),
+    path('program/<int:pk>/', ProgramUpdateView.as_view(), name='program-update'),
+    path('program/<int:pk>/delete/', ProgramDeleteView.as_view(), name='program-delete'),
 ]

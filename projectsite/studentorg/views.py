@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from studentorg.models import Organization, Student, OrgMember, College, Program
-from studentorg.forms import OrganizationForm, StudentForm, CollegeForm  # Added CollegeForm
+from studentorg.forms import OrganizationForm, StudentForm, CollegeForm, ProgramForm  # Add ProgramForm
 
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -122,22 +122,31 @@ class CollegeDeleteView(DeleteView):
 # Program
 class ProgramList(ListView):
     model = Program
-    context_object_name ='program'
-    template_name ='program_list.html'
+    context_object_name = 'program'
+    template_name = 'program_list.html'
+    paginate_by = 5  # Added pagination
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(ProgramList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") != None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(Q(prog_name__icontains=query) |
+                         Q(college__college_name__icontains=query))
+        return qs
 
 class ProgramCreateView(CreateView):
     model = Program
-    form_class = OrganizationForm
-    template_name ='program_add.html'
+    form_class = ProgramForm
+    template_name = 'org_add.html'  # Changed to reuse organization template
     success_url = reverse_lazy('program-list')
 
 class ProgramUpdateView(UpdateView):
     model = Program
-    form_class = OrganizationForm
-    template_name ='program_edit.html'
+    form_class = ProgramForm
+    template_name = 'org_edit.html'  # Changed to reuse organization template
     success_url = reverse_lazy('program-list')
 
 class ProgramDeleteView(DeleteView):
     model = Program
-    template_name ='program_del.html'
+    template_name = 'org_del.html'  # Changed to reuse organization template
     success_url = reverse_lazy('program-list')

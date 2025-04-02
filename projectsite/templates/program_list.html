@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}List of Program{% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">List of Program</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Page Subtitle</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <form class="form-inline">
+                                <div class="input-group">
+                                    <input type="text" name="q" placeholder="Search ..." class="form-control">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="la la-search search-icon"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <a href="{% url 'program-add' %}" class="btn btn-success">Add Program</a>
+                        </div>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Program Name</th>
+                                    <th>College</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prog in program %}
+                                <tr>
+                                    <td>{{ prog.prog_name }}</td>
+                                    <td>{{ prog.college }}</td>
+                                    <td>
+                                        <a href="{% url 'program-update' prog.pk %}" class="btn btn-primary btn-sm">Edit</a>
+                                        <a href="{% url 'program-delete' prog.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

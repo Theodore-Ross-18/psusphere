@@ -23,3 +23,11 @@ class CollegeForm(forms.ModelForm):
     class Meta:
         model = College
         fields = ['college_name']
+
+
+from .models import Program
+
+class ProgramForm(forms.ModelForm):
+    class Meta:
+        model = Program
+        fields = ['prog_name', 'college']
