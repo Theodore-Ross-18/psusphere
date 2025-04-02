@@ -48,7 +48,7 @@ urlpatterns = [
         path('student/<int:pk>/delete/', StudentDeleteView.as_view(), name='student-delete'),
     # Login/Logout 
     re_path(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    re_path(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
+    re_path(r'^logout/$', auth_views.LogoutView.as_view(template_name='login.html', next_page='login', http_method_names=['get', 'post']), name='logout'),
     
     # College URLs
     path('college/', CollegeList.as_view(), name='college-list'),
