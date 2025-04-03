@@ -12,6 +12,10 @@ class OrganizationForm(ModelForm):
         model = Organization
         fields = "__all__"
 
+class OrgMemberForm(forms.ModelForm):
+    class Meta:
+        model = OrgMember
+        fields = ['student', 'organization']
 
 class StudentForm(forms.ModelForm):
     class Meta:

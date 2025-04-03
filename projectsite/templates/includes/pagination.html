@@ -9,7 +9,7 @@
                     </li>
                 {% else %}
                     <li class="page-item disabled">
-                        <span class="page-link">First</span>
+                        <a class="page-link" href="?q={{ request.GET.q }}&page=1">First</a>
                     </li>
                 {% endif %}
 

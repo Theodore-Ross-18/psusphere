@@ -5,13 +5,39 @@
 {% block content %}
 <div class="content">
     <div class="container-fluid">
+        <h4 class="page-title">Home</h4>
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Organization Members List</h4>
-                        <p class="card-category">List of all organization members</p>
-                        <a href="{% url 'orgmember-add' %}" class="btn btn-primary">Add New Member</a>
+                        <div class="card-header">
+                            <div class="card-title">List of Org Members</div>
+                            <div class="card-category">Page Subtitle</div>
+                        </div>
+                        <!-- <a href="{% url 'orgmember-add' %}" class="btn btn-primary">Add New Member</a> -->
+                        <br />
+                        <div class="col-md-12 row">
+                            <div class="col-md-6">
+                                <form class="navbar-left navbar-form nav-search mr-md-3" action="{% url 'orgmember-list' %}?q={{ request.GET.q }}">
+                                    <div class="input-group">
+                                        <input type="text" placeholder="Search ..." class="form-control" name="q" value="{{ request.GET.q }}" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                <i class="la la-search search-icon"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+    
+                            <div class="col-md-6">
+                                <div class="pull-right">
+                                    <a href="{% url 'orgmember-add' %}" class="btn btn-success btn-rounded">
+                                        Add New Org. Member
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -32,10 +58,14 @@
                                         <td>{{ member.student }}</td>
                                         <td>{{ member.organization }}</td>
                                         <td>{{ member.position }}</td>
-                                        <td>
+                                        <!-- <td>
                                             <a href="{% url 'orgmember-update' member.pk %}" class="btn btn-warning btn-sm">Edit</a>
                                             <a href="{% url 'orgmember-delete' member.pk %}" class="btn btn-danger btn-sm">Delete</a>
-                                        </td>
+                                        </td> -->
+                                        <td>
+                                            <a href="{% url 'orgmember-update' member.pk %}">Edit</a>
+                                            <a href="{% url 'orgmember-delete' member.pk %}" class="text-danger">Delete</a>
+                                        </td> 
                                     </tr>
                                     {% empty %}
                                     <tr>
