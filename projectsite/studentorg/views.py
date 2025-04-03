@@ -94,6 +94,15 @@ class StudentList(ListView):
     context_object_name = 'student'
     template_name = 'student_list.html'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q', '')  # Get the search query from the GET request
+        if query:
+            # Filter the students based on the query
+            queryset = queryset.filter(
+                firstname__icontains=query) | queryset.filter(lastname__icontains=query)
+        return queryset    
+
 class StudentCreateView(CreateView):
     model = Student
     form_class = StudentForm

@@ -1,48 +1,69 @@
-{% extends 'base.html' %}
-
-{% block title %}Students{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}Students{% endblock %} {% block content %}
 <div class="content">
     <div class="container-fluid">
+        <h4 class="page-title">Students List</h4>
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Students List</h4>
-                        <p class="card-category">List of all students</p>
-                        <a href="{% url 'student-add' %}" class="btn btn-primary">Add New Student</a>
+                        <div class="card-title">List of Students</div>
+                        <div class="card-category">Page Subtitle</div>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Student ID</th>
-                                        <th>Student Name</th>
-                                        <th>Program</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for student in student %}
-                                    <tr>
-                                        <td>{{ student.student_id }}</td>
-                                        <td>{{ student.lastname }}, {{ student.firstname }}</td>
-                                        <td>{{ student.program }}</td>
-                                        <td>
-                                            <a href="{% url 'student-update' student.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                                            <a href="{% url 'student-delete' student.pk %}" class="btn btn-danger btn-sm">Delete</a>
-                                        </td>
-                                    </tr>
-                                    {% empty %}
-                                    <tr>
-                                        <td colspan="4" class="text-center">No students found.</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+
+                    <br />
+
+                    <div class="col-md-12 row">
+                        <div class="col-md-6">
+                            <form class="navbar-left navbar-form nav-search mr-md-3" action="{% url 'student-list' %}?q={{ request.GET.q }}">
+                                <div class="input-group">
+                                    <input type="text" placeholder="Search ..." class="form-control" name="q" value="{{ request.GET.q }}"/>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <i class="la la-search search-icon"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="pull-right">
+                                <a href="{% url 'student-add' %}" class="btn btn-success btn-rounded">
+                                    Add New Student
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <table class="table table-striped mt-3">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Student ID</th>
+                                    <th scope="col">Student Name</th>
+                                    <th scope="col">Program</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in student %}
+                                <tr>
+                                    <td>{{ student.student_id }}</td>
+                                    <td>{{ student.lastname }}, {{ student.firstname }}</td>
+                                    <td>{{ student.program }}</td>
+                                    <td>
+                                        <a href="{% url 'student-update' student.pk %}">Edit</a>
+                                        <a href="{% url 'student-delete' student.pk %}" class="text-danger">Delete</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">No students found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% include 'includes/pagination.html' %}
                     </div>
                 </div>
             </div>
