@@ -1,34 +1,47 @@
-{% extends 'base.html' %} {% block title %}List of Program{% endblock %} {% block content %}
+{% extends 'base.html' %} {% block title %}List of Programs{% endblock %} {% block content %}
 <div class="content">
     <div class="container-fluid">
-        <h4 class="page-title">List of Program</h4>
+        <h4 class="page-title">List of Programs</h4>
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Page Subtitle</div>
+                        <div class="card-title">Programs</div>
+                        <div class="card-category">Page Subtitle</div>
                     </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between mb-3">
-                            <form class="form-inline">
+
+                    <br />
+
+                    <div class="col-md-12 row">
+                        <div class="col-md-6">
+                            <form class="navbar-left navbar-form nav-search mr-md-3" action="{% url 'program-list' %}?q={{ request.GET.q }}">
                                 <div class="input-group">
-                                    <input type="text" name="q" placeholder="Search ..." class="form-control">
+                                    <input type="text" placeholder="Search ..." class="form-control" name="q" />
                                     <div class="input-group-append">
-                                        <button type="submit" class="btn btn-primary">
+                                        <span class="input-group-text">
                                             <i class="la la-search search-icon"></i>
-                                        </button>
+                                        </span>
                                     </div>
                                 </div>
                             </form>
-                            <a href="{% url 'program-add' %}" class="btn btn-success">Add Program</a>
                         </div>
 
-                        <table class="table">
+                        <div class="col-md-6">
+                            <div class="pull-right">
+                                <a href="{% url 'program-add' %}" class="btn btn-success btn-rounded">
+                                    Add Program
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <table class="table table-striped mt-3">
                             <thead>
                                 <tr>
-                                    <th>Program Name</th>
-                                    <th>College</th>
-                                    <th>Action</th>
+                                    <th scope="col">Program Name</th>
+                                    <th scope="col">College</th>
+                                    <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -37,13 +50,18 @@
                                     <td>{{ prog.prog_name }}</td>
                                     <td>{{ prog.college }}</td>
                                     <td>
-                                        <a href="{% url 'program-update' prog.pk %}" class="btn btn-primary btn-sm">Edit</a>
-                                        <a href="{% url 'program-delete' prog.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                                        <a href="{% url 'program-update' prog.pk %}">Edit</a>
+                                        <a href="{% url 'program-delete' prog.pk %}" class="text-danger">Delete</a>
                                     </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center">No programs found.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
+                        {% include 'includes/pagination.html' %}
                     </div>
                 </div>
             </div>

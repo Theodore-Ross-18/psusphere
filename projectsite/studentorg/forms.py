@@ -29,8 +29,6 @@ class CollegeForm(forms.ModelForm):
         fields = ['college_name']
 
 
-from .models import Program
-
 class ProgramForm(forms.ModelForm):
     class Meta:
         model = Program

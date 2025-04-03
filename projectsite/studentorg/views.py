@@ -150,13 +150,14 @@ class ProgramList(ListView):
     template_name = 'program_list.html'
     paginate_by = 5
 
-    def get_queryset(self, *args, **kwargs):
-        qs = super(ProgramList, self).get_queryset(*args, **kwargs)
-        if self.request.GET.get("q") != None:
-            query = self.request.GET.get('q')
-            qs = qs.filter(Q(prog_name__icontains=query) |
-                         Q(college__college_name__icontains=query))
-        return qs
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q', '')  # Get the search query from the GET request
+        if query:
+            # Filter the programs based on the query
+            queryset = queryset.filter(prog_name__icontains=query)  # Use 'prog_name' instead of 'name'
+        return queryset
+
 
 class ProgramCreateView(CreateView):
     model = Program
