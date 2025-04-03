@@ -1,24 +1,24 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
 <div class="content">
     <div class="container-fluid">
-        <h4 class="page-title">Delete Student</h4>
+        <h4 class="page-title">Home</h4>
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Delete Student</div>
+                        <div class="card-title">Edit College</div>
                         <div class="card-category">Page Subtitle</div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="card-body">
                             <form action="" method="post" novalidate>
-                                <p>Are you sure you want to delete student "{{ object.firstname }} {{ object.lastname }}"?</p>
-                                {% csrf_token %} {% include 'includes/form.html' %}
+                                {% csrf_token %}
+                                {% include 'includes/form.html' %}
 
                                 <div class="form-group">
                                     <div class="col-md-12 col-sm-3">
-                                        <button type="submit" class="btn btn-danger btn-rounded">Delete</button>
+                                        <button type="submit" class="btn btn-primary btn-rounded">Submit</button>
                                     </div>
                                 </div>
                             </form>
