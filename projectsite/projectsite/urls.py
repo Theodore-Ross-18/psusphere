@@ -29,6 +29,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.HomePageView.as_view(), name='home'),
+    path('dashboard/', views.DashboardView.as_view(), name='dashboard'),  # Add this line for dashboard
     # Organization List
     path('organization_list/', OrganizationList.as_view(), name='organization-list'),
     path('organization_list/add/', OrganizationCreateView.as_view(), name='organization-add'),
@@ -61,4 +62,13 @@ urlpatterns = [
     path('program/add/', ProgramCreateView.as_view(), name='program-add'),
     path('program/<int:pk>/', ProgramUpdateView.as_view(), name='program-update'),
     path('program/<int:pk>/delete/', ProgramDeleteView.as_view(), name='program-delete'),
+    
+    # Chart Data URLs
+    # Dashboard and Chart URLs
+    path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
+    path('charts/timeline/', views.timeline_chart, name='timeline-chart'),
+    path('charts/popular-organizations/', views.popular_organizations_chart, name='popularorgs-chart'),
+    path('charts/membership-distribution/', views.membership_distribution, name='membership-distribution'),
+    path('charts/bubble-chart/', views.bubble_chart_data, name='bubble-chart-data'),
+    path('charts/scatter-plot/', views.scatter_plot_data, name='scatter-plot-data'),
 ]

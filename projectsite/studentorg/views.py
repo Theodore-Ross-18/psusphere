@@ -5,18 +5,34 @@ from django.db.models import Q
 # Views
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView
 from studentorg.models import Organization, Student, OrgMember, College, Program
 from studentorg.forms import OrganizationForm, OrgMemberForm, StudentForm, CollegeForm, ProgramForm
 
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.db.models import Count
+from django.db.models.functions import TruncDate
+from django.views.generic import TemplateView
 
 @method_decorator(login_required, name='dispatch')
+class DashboardView(TemplateView):
+    template_name = 'dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_organizations'] = Organization.objects.count()
+        context['total_students'] = Student.objects.count()
+        context['total_members'] = OrgMember.objects.count()
+        context['total_programs'] = Program.objects.count()
+        return context
+
 class HomePageView(ListView):
     model = Organization
     context_object_name = 'home'
-    template_name = 'home.html'
+    template_name = 'dashboard.html'
 
 # Organization
 class OrganizationList(ListView):
@@ -175,3 +191,100 @@ class ProgramDeleteView(DeleteView):
     model = Program
     template_name = 'program_del.html'
     success_url = reverse_lazy('program-list')
+
+
+def timeline_chart(request):
+    data = OrgMember.objects.annotate(
+        date=TruncDate('date_joined')
+    ).values('date').annotate(
+        count=Count('id')
+    ).order_by('date')
+    
+    return JsonResponse({
+        'labels': [item['date'].strftime('%Y-%m-%d') for item in data],
+        'datasets': [{
+            'label': 'New Members',
+            'data': [item['count'] for item in data],
+            'fill': False,
+            'borderColor': 'rgb(75, 192, 192)',
+            'tension': 0.1
+        }]
+    })
+
+def popular_organizations_chart(request):
+    data = Organization.objects.annotate(
+        member_count=Count('orgmember')
+    ).values('name', 'member_count').order_by('-member_count')[:5]
+    
+    return JsonResponse({
+        'labels': [item['name'] for item in data],
+        'datasets': [{
+            'label': 'Number of Members',
+            'data': [item['member_count'] for item in data],
+            'backgroundColor': [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(75, 192, 192, 0.5)',
+                'rgba(153, 102, 255, 0.5)'
+            ]
+        }]
+    })
+
+def membership_distribution(request):
+    data = College.objects.annotate(
+        member_count=Count('student__orgmember')
+    ).values('name', 'member_count')
+    
+    return JsonResponse({
+        'labels': [item['name'] for item in data],
+        'datasets': [{
+            'data': [item['member_count'] for item in data],
+            'backgroundColor': [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 206, 86, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)'
+            ]
+        }]
+    })
+
+def bubble_chart_data(request):
+    colleges = College.objects.all()
+    datasets = []
+    
+    for college in colleges:
+        member_count = OrgMember.objects.filter(student__college=college).count()
+        org_count = Organization.objects.filter(orgmember__student__college=college).distinct().count()
+        student_count = Student.objects.filter(college=college).count()
+        
+        datasets.append({
+            'label': college.name,
+            'data': [{
+                'x': member_count,
+                'y': org_count,
+                'r': student_count / 10  # Divide by 10 to get reasonable bubble sizes
+            }]
+        })
+    
+    return JsonResponse({'datasets': datasets})
+
+def scatter_plot_data(request):
+    colleges = College.objects.all()
+    datasets = []
+    
+    for college in colleges:
+        org_count = Organization.objects.filter(orgmember__student__college=college).distinct().count()
+        member_count = OrgMember.objects.filter(student__college=college).count()
+        
+        datasets.append({
+            'label': college.name,
+            'data': [{
+                'x': org_count,
+                'y': member_count,
+                'college': college.name
+            }]
+        })
+    
+    return JsonResponse({'datasets': datasets})
