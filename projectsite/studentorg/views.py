@@ -1,22 +1,18 @@
 from django.shortcuts import render
 from typing import Any
 from django.db.models.query import QuerySet
-from django.db.models import Q
-# Views
-from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic import TemplateView
-from studentorg.models import Organization, Student, OrgMember, College, Program
-from studentorg.forms import OrganizationForm, OrgMemberForm, StudentForm, CollegeForm, ProgramForm
-
+from django.db.models import Q, Count
+from django.db.models.functions import TruncDate
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.db.models import Count
-from django.db.models.functions import TruncDate
-from django.views.generic import TemplateView
 
+from studentorg.models import Organization, Student, OrgMember, College, Program
+from studentorg.forms import OrganizationForm, OrgMemberForm, StudentForm, CollegeForm, ProgramForm
+
+# Dashboard
 @method_decorator(login_required, name='dispatch')
 class DashboardView(TemplateView):
     template_name = 'dashboard.html'
@@ -34,7 +30,7 @@ class HomePageView(ListView):
     context_object_name = 'home'
     template_name = 'dashboard.html'
 
-# Organization
+# Organization Views
 class OrganizationList(ListView):
     model = Organization
     context_object_name = 'organization'
@@ -43,12 +39,10 @@ class OrganizationList(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        query = self.request.GET.get('q', '')  # Get the search query from the GET request
+        query = self.request.GET.get('q', '')
         if query:
-            # Filter the organizations based on the query
             queryset = queryset.filter(name__icontains=query)
         return queryset
-
 
 class OrganizationCreateView(CreateView):
     model = Organization
@@ -67,25 +61,23 @@ class OrganizationDeleteView(DeleteView):
     template_name = 'org_del.html'
     success_url = reverse_lazy('organization-list')
 
-# Org. Members
+# Org Member Views
 class OrgMemberList(ListView):
     model = OrgMember
     context_object_name = 'orgmember'
     template_name = 'orgmember_list.html'
     paginate_by = 5
-    
-    def get_queryset(self, *args, **kwargs):
-        qs = super(OrgMemberList, self).get_queryset(*args, **kwargs)
-        query = self.request.GET.get('q')  # Get the search query
 
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        query = self.request.GET.get('q')
         if query:
             qs = qs.filter(
-                Q(student__lastname__icontains=query) |  # Searching by student last name
-                Q(student__firstname__icontains=query) |  # Searching by student first name
-                Q(organization__name__icontains=query)    # Searching by organization name
+                Q(student__lastname__icontains=query) |
+                Q(student__firstname__icontains=query) |
+                Q(organization__name__icontains=query)
             )
         return qs
-    
 
 class OrgMemberCreateView(CreateView):
     model = OrgMember
@@ -96,15 +88,15 @@ class OrgMemberCreateView(CreateView):
 class OrgMemberUpdateView(UpdateView):
     model = OrgMember
     form_class = OrgMemberForm
-    template_name = 'orgmember_edit.html'  
+    template_name = 'orgmember_edit.html'
     success_url = reverse_lazy('orgmember-list')
 
 class OrgMemberDeleteView(DeleteView):
     model = OrgMember
-    template_name = 'orgmember_del.html' 
+    template_name = 'orgmember_del.html'
     success_url = reverse_lazy('orgmember-list')
 
-# Student
+# Student Views
 class StudentList(ListView):
     model = Student
     context_object_name = 'student'
@@ -112,12 +104,13 @@ class StudentList(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        query = self.request.GET.get('q', '')  # Get the search query from the GET request
+        query = self.request.GET.get('q', '')
         if query:
-            # Filter the students based on the query
             queryset = queryset.filter(
-                firstname__icontains=query) | queryset.filter(lastname__icontains=query)
-        return queryset    
+                Q(firstname__icontains=query) |
+                Q(lastname__icontains=query)
+            )
+        return queryset
 
 class StudentCreateView(CreateView):
     model = Student
@@ -133,14 +126,14 @@ class StudentUpdateView(UpdateView):
 
 class StudentDeleteView(DeleteView):
     model = Student
-    template_name = 'student_del.html' 
+    template_name = 'student_del.html'
     success_url = reverse_lazy('student-list')
 
-# College
+# College Views
 class CollegeList(ListView):
     model = College
-    context_object_name ='college'
-    template_name ='college_list.html'
+    context_object_name = 'college'
+    template_name = 'college_list.html'
 
 class CollegeCreateView(CreateView):
     model = College
@@ -159,7 +152,7 @@ class CollegeDeleteView(DeleteView):
     template_name = 'college_del.html'
     success_url = reverse_lazy('college-list')
 
-# Program
+# Program Views
 class ProgramList(ListView):
     model = Program
     context_object_name = 'program'
@@ -168,12 +161,10 @@ class ProgramList(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        query = self.request.GET.get('q', '')  # Get the search query from the GET request
+        query = self.request.GET.get('q', '')
         if query:
-            # Filter the programs based on the query
-            queryset = queryset.filter(prog_name__icontains=query)  # Use 'prog_name' instead of 'name'
+            queryset = queryset.filter(prog_name__icontains=query)
         return queryset
-
 
 class ProgramCreateView(CreateView):
     model = Program
@@ -192,10 +183,10 @@ class ProgramDeleteView(DeleteView):
     template_name = 'program_del.html'
     success_url = reverse_lazy('program-list')
 
-
+# Chart Data Views
 def timeline_chart(request):
     data = OrgMember.objects.annotate(
-        date=TruncDate('date_joined')
+        date=TruncDate('created_at')
     ).values('date').annotate(
         count=Count('id')
     ).order_by('date')
@@ -233,11 +224,11 @@ def popular_organizations_chart(request):
 
 def membership_distribution(request):
     data = College.objects.annotate(
-        member_count=Count('student__orgmember')
-    ).values('name', 'member_count')
+        member_count=Count('program__student__orgmember')
+    ).values('college_name', 'member_count')
     
     return JsonResponse({
-        'labels': [item['name'] for item in data],
+        'labels': [item['college_name'] for item in data],
         'datasets': [{
             'data': [item['member_count'] for item in data],
             'backgroundColor': [
@@ -255,16 +246,16 @@ def bubble_chart_data(request):
     datasets = []
     
     for college in colleges:
-        member_count = OrgMember.objects.filter(student__college=college).count()
-        org_count = Organization.objects.filter(orgmember__student__college=college).distinct().count()
-        student_count = Student.objects.filter(college=college).count()
+        member_count = OrgMember.objects.filter(student__program__college=college).count()
+        org_count = Organization.objects.filter(orgmember__student__program__college=college).distinct().count()
+        student_count = Student.objects.filter(program__college=college).count()
         
         datasets.append({
-            'label': college.name,
+            'label': college.college_name,
             'data': [{
                 'x': member_count,
                 'y': org_count,
-                'r': student_count / 10  # Divide by 10 to get reasonable bubble sizes
+                'r': student_count / 10  # Adjust bubble size
             }]
         })
     
@@ -275,15 +266,15 @@ def scatter_plot_data(request):
     datasets = []
     
     for college in colleges:
-        org_count = Organization.objects.filter(orgmember__student__college=college).distinct().count()
-        member_count = OrgMember.objects.filter(student__college=college).count()
+        org_count = Organization.objects.filter(orgmember__student__program__college=college).distinct().count()
+        member_count = OrgMember.objects.filter(student__program__college=college).count()
         
         datasets.append({
-            'label': college.name,
+            'label': college.college_name,
             'data': [{
                 'x': org_count,
                 'y': member_count,
-                'college': college.name
+                'college': college.college_name
             }]
         })
     
